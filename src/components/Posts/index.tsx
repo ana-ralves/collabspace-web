@@ -1,47 +1,65 @@
 import Avatar from "../Avatar";
+import Comment from "../Comment";
 
-import { Container, Content, Hashtags, Divider } from "./styles";
+import {
+  Container,
+  Header,
+  Author,
+  AuthorInfo,
+  Content,
+  Description,
+  Hashtags,
+  Divider,
+  CommentForm,
+  Comments,
+} from "./styles";
 
 const Post: React.FC = () => {
   return (
     <Container>
-      <header>
-        <div>
+      <Header>
+        <Author>
           <Avatar />
 
-          <section>
+          <AuthorInfo>
             <h1>Ana Alves</h1>
             <p>ramos.alvesac@gmail.com</p>
-          </section>
-        </div>
+          </AuthorInfo>
+        </Author>
 
-        <p>Publicado à 1h</p>
-      </header>
+        <time>Publicado à 1h</time>
+      </Header>
 
-      <main>
-        <Content>
+      <Content>
+        <Description>
           <p>Fala galeraa 👏</p>
           <p>
             Você pode sempre sonhar, e seus sonhos se tornarão sonhos, e a
             realidade se tornará realidade. Mas é você que tem realidade. 🚀
           </p>
-        </Content>
+        </Description>
 
         <Hashtags>
           <span>#collabspace</span>
           <span>#confia</span>
         </Hashtags>
-      </main>
+      </Content>
 
       <Divider />
 
-      <footer>
+      <CommentForm>
         <h1>Deixe seu comentário</h1>
 
         <textarea name=""></textarea>
 
         <button>Comentar</button>
-      </footer>
+      </CommentForm>
+
+      <Divider />
+
+      <Comments>
+        <Comment />
+      </Comments>
     </Container>
   );
 };
