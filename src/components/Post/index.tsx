@@ -1,5 +1,7 @@
 import Avatar from "../Avatar";
 import Comment from "../Comment";
+import InputArea from "../InputArea";
+import Button from "../Button";
 
 import {
   Container,
@@ -19,11 +21,14 @@ const Post: React.FC = () => {
     <Container>
       <Header>
         <Author>
-          <Avatar />
+          <Avatar
+            src="https://b.fssta.com/uploads/application/soccer/headshots/713.png"
+            borderEffect
+          />
 
           <AuthorInfo>
-            <h1>Ana Alves</h1>
-            <p>ramos.alvesac@gmail.com</p>
+            <h1>Neymar Jr</h1>
+            <p>ney@hotney.com</p>
           </AuthorInfo>
         </Author>
 
@@ -32,10 +37,11 @@ const Post: React.FC = () => {
 
       <Content>
         <Description>
-          <p>Fala galeraa 👏</p>
+          <p>Fala galeraa 👋</p>
           <p>
             Você pode sempre sonhar, e seus sonhos se tornarão sonhos, e a
-            realidade se tornará realidade. Mas é você que tem realidade. 🚀
+            realidade se tornará realidade. Mas é você que tem que torná-los
+            realidade. 🚀
           </p>
         </Description>
 
@@ -50,9 +56,13 @@ const Post: React.FC = () => {
       <CommentForm>
         <h1>Deixe seu comentário</h1>
 
-        <textarea name=""></textarea>
+        <InputArea
+          placeholder="Escreva seu comentário aqui ..."
+          name=""
+          rows={3}
+        />
 
-        <button>Comentar</button>
+        <Button>Comentar</Button>
       </CommentForm>
 
       <Divider />

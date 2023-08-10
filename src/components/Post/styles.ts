@@ -46,7 +46,7 @@ export const Content = styled.div`
 export const Description = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 
   p {
     font-size: 1rem;
@@ -87,44 +87,6 @@ export const CommentForm = styled.form`
   h1 {
     font-size: 1rem;
     color: var(--zinc-200);
-  }
-
-  textarea {
-    width: 100%;
-    font-size: 0.875rem;
-    color: var(--zinc-300);
-    background: var(--zinc-900);
-    border: 0;
-    outline: 0;
-    resize: none;
-    height: 6rem;
-    padding: 1rem;
-    border-radius: 8px;
-    font-size: 1rem;
-
-    &:focus {
-      outline: 1px solid var(--emerald-500);
-    }
-  }
-
-  button {
-    width: 150px;
-    padding: 1rem 1.5rem;
-    background: var(--emerald-600);
-    color: var(--zinc-200);
-    font-size: 1rem;
-    font-weight: bold;
-    border: 1px solid var(--emerald-600);
-    outline: 0;
-    border-radius: 8px;
-    transition: all 0.25s;
-
-    cursor: pointer;
-
-    &:hover {
-      color: var(--emerald-600);
-      background: transparent;
-    }
   }
 `;
 

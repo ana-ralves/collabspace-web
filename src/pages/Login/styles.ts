@@ -11,10 +11,10 @@ export const Container = styled.div`
 `;
 
 export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
   width: 320px;
   padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
 
   h1 {
     color: var(--zinc-100);
@@ -22,13 +22,13 @@ export const Form = styled.form`
     font-weight: 600;
     margin-bottom: 2.5rem;
   }
+`;
 
-  div {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-bottom: 1.25rem;
-  }
+export const Group = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
 `;
 
 export const Label = styled.label`
@@ -47,12 +47,12 @@ export const Input = styled.input`
   outline: 0;
 
   ::placeholder {
-    color: var(--zinc-500);
+    color: ar(--zinc-500);
   }
 `;
 
 export const Button = styled.button`
-  height: 40px;
+  height: 48px;
   background: var(--emerald-600);
   color: var(--zinc-100);
   font-size: 1.125rem;
