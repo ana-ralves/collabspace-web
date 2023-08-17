@@ -1,7 +1,7 @@
 import { styled, css } from "styled-components";
 
 interface CommentAreaProps {
-  commentArea: boolean;
+  $commentArea: boolean;
 }
 
 export const Container = styled.div`
@@ -116,6 +116,7 @@ export const CountReaction = styled.div`
     display: flex;
     gap: 4px;
   }
+
   svg {
     color: var(--emerald-600);
   }
@@ -156,8 +157,8 @@ export const ButtonAction = styled.button`
 export const CommentArea = styled.div<CommentAreaProps>`
   margin-top: 2rem;
 
-  ${({ commentArea }) =>
-    !commentArea &&
+  ${({ $commentArea }) =>
+    !$commentArea &&
     css`
       display: none;
     `}

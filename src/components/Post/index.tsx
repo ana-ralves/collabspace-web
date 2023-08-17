@@ -15,6 +15,7 @@ import {
   Hashtags,
   Divider,
   Interactions,
+  InteractionInfo,
   CountReaction,
   CountComment,
   InteractionAction,
@@ -22,7 +23,6 @@ import {
   CommentArea,
   CommentForm,
   Comments,
-  InteractionInfo,
 } from "./styles";
 import { useState } from "react";
 
@@ -94,15 +94,11 @@ const Post: React.FC = () => {
         </InteractionAction>
       </Interactions>
 
-      <CommentArea commentArea={commentArea}>
+      <CommentArea $commentArea={commentArea}>
         <CommentForm>
           <h1>Deixe seu comentário</h1>
 
-          <InputArea
-            placeholder="Escreva seu comentário aqui ..."
-            name=""
-            rows={3}
-          />
+          <InputArea rows={3} placeholder="Escreva seu comentário aqui ..." />
 
           <Button>Comentar</Button>
         </CommentForm>

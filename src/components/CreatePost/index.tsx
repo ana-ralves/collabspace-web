@@ -1,14 +1,15 @@
 import Avatar from "../Avatar";
 import InputArea from "../InputArea";
-import { Container, Content } from "./styles";
 import Button from "../Button";
+
+import { Container, Content } from "./styles";
 
 const CreatePost: React.FC = () => {
   return (
     <Container>
       <Content>
         <Avatar
-          src="https://pm1.aminoapps.com/7855/295c9fa3a57d71b5d2c9a9d593cdefb115dd75e2r1-917-918v2_00.jpg"
+          src="https://i.pinimg.com/736x/b7/65/02/b76502e936cd209b595bd7a537e74db4.jpg"
           borderEffect
         />
 
