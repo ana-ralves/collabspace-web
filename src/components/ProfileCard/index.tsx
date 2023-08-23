@@ -25,7 +25,7 @@ const ProfileCard: React.FC = () => {
       </Header>
 
       <Content>
-        <h1>Ana Cristina Ramos Alves</h1>
+        <h1>Ana Alves</h1>
         <p>ramos.alvesac@gmail.com</p>
       </Content>
 

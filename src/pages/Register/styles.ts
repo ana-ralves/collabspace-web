@@ -95,7 +95,7 @@ export const AreaEmail = styled(Group)<AreaEmailProps>`
 `;
 
 export const AreaPassword = styled(Group)<AreaPasswordProps>`
-  max-height: 160px;
+  max-height: 170px;
   transition: 0.3s ease;
   overflow: hidden;
 
@@ -103,7 +103,7 @@ export const AreaPassword = styled(Group)<AreaPasswordProps>`
     $areaPassword &&
     css`
       max-height: 0;
-    `}
+    `};
 `;
 
 export const PasswordMeter = styled.div<PasswordMeterProps>`
@@ -113,11 +113,7 @@ export const PasswordMeter = styled.div<PasswordMeterProps>`
   text-align: ${({ $isWeak }) => ($isWeak ? "left" : "right")};
   margin-bottom: 0.5rem;
 
-  background: linear-gradient(
-    to right,
-    var(--emerald-600) 50%,
-    var(--zinc-300) 50%
-  );
+  background: var(--zinc-300);
 
   &::after {
     content: "Senha fraca";

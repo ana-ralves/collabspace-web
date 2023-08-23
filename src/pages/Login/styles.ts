@@ -59,7 +59,7 @@ export const Button = styled.button`
   font-size: 1.125rem;
   font-weight: bold;
   padding: 0 1rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
   border: 0;
   outline: 0;
   border-radius: 4px;
@@ -72,7 +72,7 @@ export const Button = styled.button`
   }
 `;
 
-export const LinkRegister = styled.a`
+export const LinkRegister = styled.div`
   font-size: 0.875rem;
   text-align: center;
 

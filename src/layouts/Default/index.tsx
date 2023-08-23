@@ -7,6 +7,7 @@ import { Container, Content } from "./styles";
 interface LayoutDefaultProps {
   children: ReactNode;
 }
+
 const LayoutDefault: React.FC<LayoutDefaultProps> = ({ children }) => {
   return (
     <Container>

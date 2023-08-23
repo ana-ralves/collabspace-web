@@ -1,6 +1,5 @@
-import { useNavigate } from "react-router-dom";
-
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   Container,
@@ -11,17 +10,13 @@ import {
   Input,
   AreaEmail,
   AreaPassword,
-  Button,
   PasswordMeter,
+  Button,
   LinkLogin,
 } from "./styles";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
-
-  const handleLogin = () => {
-    navigate("/");
-  };
 
   const [name, setName] = useState("");
   const [birthDate, setBirthDate] = useState("");
@@ -41,9 +36,13 @@ const Register: React.FC = () => {
     /(?=^.{8,}$)((?=.*\d)(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/,
   );
 
+  const handleLogin = () => {
+    navigate("/");
+  };
+
   return (
     <Container>
-      <Form autoComplete="off">
+      <Form autoComplete="on">
         <h1>Cadastre-se</h1>
 
         {email && !isEmail && <ErrorAlert>O e-mail não é válido!</ErrorAlert>}
