@@ -1,6 +1,5 @@
 import { ThumbsUp, ChatCircleText } from "phosphor-react";
 
-import Avatar from "../Avatar";
 import Comment from "../Comment";
 import InputArea from "../InputArea";
 import Button from "../Button";
@@ -25,6 +24,7 @@ import {
   Comments,
 } from "./styles";
 import { useState } from "react";
+import AvatarSquare from "../AvatarSquare";
 
 const Post: React.FC = () => {
   const [commentArea, setCommentArea] = useState(false);
@@ -37,7 +37,7 @@ const Post: React.FC = () => {
     <Container>
       <Header>
         <Author>
-          <Avatar
+          <AvatarSquare
             src="https://b.fssta.com/uploads/application/soccer/headshots/713.png"
             borderEffect
           />
