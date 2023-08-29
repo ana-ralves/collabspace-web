@@ -30,4 +30,32 @@ const LogoRocket = ({ ...rest }) => (
   </svg>
 );
 
-export { LogoRocket };
+const SpinerLogin = ({ ...rest }) => (
+  <svg
+    width="100"
+    height="100"
+    viewBox="0 0 100 100"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="#e4e4e7"
+    {...rest}
+  >
+    <circle
+      cx="50"
+      cy="50"
+      r="40"
+      stroke="#e4e4e7"
+      strokeWidth="10"
+      fill="none"
+    >
+      <animate
+        attributeName="stroke-dasharray"
+        from="0,251.32741228718345"
+        to="251.32741228718345,0"
+        dur="0.75s"
+        repeatCount="indefinite"
+      />
+    </circle>
+  </svg>
+);
+
+export { LogoRocket, SpinerLogin };
