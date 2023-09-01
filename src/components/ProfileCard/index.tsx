@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
+import { useAuthentication } from "../../contexts/Authentication";
+
 import {
   Container,
   Header,
@@ -13,28 +15,30 @@ import {
 import AvatarSquare from "../AvatarSquare";
 
 const ProfileCard: React.FC = () => {
+  const { user } = useAuthentication();
+
   const navigate = useNavigate();
 
   const handleMe = () => {
-    navigate("/me");
+    if (user) navigate(`/me/${user?.id}`);
   };
 
   return (
     <Container>
       <Header>
-        <Cover src="https://img.freepik.com/free-photo/magical-mystical-landscape-wallpaper-purple-tones_23-2150293331.jpg?t=st=1691626643~exp=1691630243~hmac=b0f2432fc002e13f98d86a9d84dd4583ea2998fc6af6a59c1b8438bc2d3fb89e&w=1060" />
+        <Cover src="https://i.imgur.com/gH2QLjf.png" />
 
         <div onClick={handleMe}>
           <AvatarSquare
-            src="https://pm1.aminoapps.com/7855/295c9fa3a57d71b5d2c9a9d593cdefb115dd75e2r1-917-918v2_00.jpg"
+            src={user?.avatarUrl || "https://i.imgur.com/HYrZqHy.jpg"}
             borderEffect
           />
         </div>
       </Header>
 
       <Content>
-        <h1>Ana Alves</h1>
-        <p>ramos.alvesac@gmail.com</p>
+        <h1 onClick={handleMe}>{user?.name}</h1>
+        <p>{user?.email}</p>
       </Content>
 
       <Divider />

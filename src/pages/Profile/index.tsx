@@ -1,3 +1,8 @@
+import { useParams } from "react-router-dom";
+import moment from "moment";
+import { toast } from "react-toastify";
+import { useState, useCallback, useEffect } from "react";
+
 import LayoutDefault from "../../layouts/Default";
 
 import RequestFriend from "../../components/RequestFriend";
@@ -7,6 +12,8 @@ import FriendCard from "../../components/FriendCard";
 import AvatarCircle from "../../components/AvatarCircle";
 
 import { Camera, PencilSimple, MapPin, Phone, Clock } from "phosphor-react";
+import { listUserById } from "../../services/users";
+import { IUser } from "../../services/users/types";
 
 import {
   Container,
@@ -27,8 +34,45 @@ import {
   RequestList,
   EditInfoButton,
 } from "./styles";
+import { useAuthentication } from "../../contexts/Authentication";
+
+moment.defineLocale("pt-br", {
+  weekdays:
+    "Segunda_Terça-feira_Quarta-feira_Quinta-feira_Sexta-feira_Sábado_Domingo".split(
+      "_",
+    ),
+  months:
+    "Janeiro_Fevereiro_Março_Abril_Maio_Junho_Julho_Agosto_Setembro_Outubro_Novembro_Dezembro".split(
+      "_",
+    ),
+});
 
 const Profile: React.FC = () => {
+  const { id } = useParams();
+  const { signOut } = useAuthentication();
+
+  const [user, setUser] = useState<IUser | null>(null);
+
+  const handleListUserById = useCallback(async () => {
+    try {
+      if (id) {
+        const { result, message, data } = await listUserById({ id });
+
+        if (result === "success") {
+          if (data) setUser(data.user);
+        }
+
+        if (result === "error") toast.error(message);
+      }
+    } catch (error: any) {
+      toast.error(error.message as string);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    handleListUserById();
+  }, [id, handleListUserById]);
+
   return (
     <LayoutDefault>
       <Container>
@@ -38,12 +82,12 @@ const Profile: React.FC = () => {
               <EditCoverButton>
                 <Camera size={22} weight="fill" />
               </EditCoverButton>
-              <Cover src="https://img.freepik.com/free-photo/magical-mystical-landscape-wallpaper-purple-tones_23-2150293331.jpg?t=st=1691626643~exp=1691630243~hmac=b0f2432fc002e13f98d86a9d84dd4583ea2998fc6af6a59c1b8438bc2d3fb89e&w=1060" />
+              <Cover src="https://i.imgur.com/gH2QLjf.png" />
 
               <div>
                 <AvatarCircle
                   size="192px"
-                  src="https://pm1.aminoapps.com/7855/295c9fa3a57d71b5d2c9a9d593cdefb115dd75e2r1-917-918v2_00.jpg"
+                  src={user?.avatarUrl || "https://i.imgur.com/HYrZqHy.jpg"}
                 />
               </div>
 
@@ -54,7 +98,7 @@ const Profile: React.FC = () => {
 
             <UserInfo>
               <General>
-                <h1>Ana Alves</h1>
+                <h1>{user?.name}</h1>
                 <p>
                   Você só vai me olhar, me julgar, tirar conclusões
                   precipitadas, mas ainda… assim não vai me conhecer.
@@ -76,14 +120,16 @@ const Profile: React.FC = () => {
                   Jaborandi, São Paulo, Brasil
                 </span>
 
-                <span>
-                  <Phone size={20} weight="bold" />
-                  (17) 98802-8775
-                </span>
+                {user?.telephone && (
+                  <span>
+                    <Phone size={20} weight="bold" />
+                    {user?.telephone}
+                  </span>
+                )}
 
                 <span>
                   <Clock size={20} weight="bold" />
-                  Entrou em Fevereiro de 2023
+                  {moment(user?.createdAt).format("[Entrou em] MMMM [de] YYYY")}
                 </span>
               </Contact>
             </UserInfo>
@@ -125,6 +171,10 @@ const Profile: React.FC = () => {
               <RequestFriend />
             </RequestList>
           </Requests>
+
+          <a style={{ color: "white", marginTop: "16px" }} onClick={signOut}>
+            Sair
+          </a>
         </Sidebar>
       </Container>
     </LayoutDefault>

@@ -1,8 +1,12 @@
 import { ThumbsUp, ChatCircleText } from "phosphor-react";
+import moment from "moment";
 
 import Comment from "../Comment";
 import InputArea from "../InputArea";
 import Button from "../Button";
+
+import { useState } from "react";
+import AvatarSquare from "../AvatarSquare";
 
 import {
   Container,
@@ -23,47 +27,61 @@ import {
   CommentForm,
   Comments,
 } from "./styles";
-import { useState } from "react";
-import AvatarSquare from "../AvatarSquare";
 
-const Post: React.FC = () => {
+interface PostProps {
+  authorAvatar: string | null;
+  authorName: string;
+  authorEmail: string;
+  publishedAt: string;
+  content: string;
+  tags: string | null;
+  comments: any[];
+  reactions: any[];
+}
+
+const Post: React.FC<PostProps> = ({
+  authorAvatar,
+  authorName,
+  authorEmail,
+  publishedAt,
+  content,
+  tags,
+  comments = [],
+  reactions = [],
+}) => {
   const [commentArea, setCommentArea] = useState(false);
 
   function toggleCommentArea() {
     setCommentArea(!commentArea);
   }
 
+  const diff = moment().diff(publishedAt, "seconds");
+
   return (
     <Container>
       <Header>
         <Author>
           <AvatarSquare
-            src="https://b.fssta.com/uploads/application/soccer/headshots/713.png"
+            src={authorAvatar || "https://i.imgur.com/HYrZqHy.jpg"}
             borderEffect
           />
 
           <AuthorInfo>
-            <h1>Neymar Jr</h1>
-            <p>ney@hotney.com</p>
+            <h1>{authorName}</h1>
+            <p>{authorEmail}</p>
           </AuthorInfo>
         </Author>
 
-        <time>Publicado à 1h</time>
+        <time>{publishedAt}</time>
       </Header>
 
       <Content>
         <Description>
-          <p>Fala galeraa 👋</p>
-          <p>
-            Você pode sempre sonhar, e seus sonhos se tornarão sonhos, e a
-            realidade se tornará realidade. Mas é você que tem que torná-los
-            realidade. 🚀
-          </p>
+          <p>{content}</p>
         </Description>
 
         <Hashtags>
-          <span>#collabspace</span>
-          <span>#confia</span>
+          <span>{tags}</span>
         </Hashtags>
       </Content>
 
@@ -72,12 +90,14 @@ const Post: React.FC = () => {
           <CountReaction>
             <span>
               <ThumbsUp size={19} weight="bold" />
-              32
+              {reactions.length}
             </span>
           </CountReaction>
 
           <CountComment>
-            <span onClick={toggleCommentArea}>7 comentários</span>
+            <span onClick={toggleCommentArea}>
+              {comments.length} comentários
+            </span>
           </CountComment>
         </InteractionInfo>
 
