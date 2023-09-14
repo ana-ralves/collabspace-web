@@ -20,13 +20,13 @@ const ProfileCard: React.FC = () => {
   const navigate = useNavigate();
 
   const handleMe = () => {
-    if (user) navigate(`/me/${user?.id}`);
+    if (user) navigate(`/me/${user.id}`);
   };
 
   return (
     <Container>
       <Header>
-        <Cover src="https://i.imgur.com/gH2QLjf.png" />
+        <Cover src={"https://i.imgur.com/gH2QLjf.png"} />
 
         <div onClick={handleMe}>
           <AvatarSquare

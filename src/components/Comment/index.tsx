@@ -1,10 +1,15 @@
-import { Trash } from "phosphor-react";
-import Avatar from "../AvatarSquare";
-import { Container, CommentBox, AuthorAndTime, ButtonDelete } from "./styles";
-import { DiffToString } from "../../utils/date";
-import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
+
+import { Trash } from "phosphor-react";
+
+import Avatar from "../AvatarSquare";
+
+import { DiffToString } from "../../utils/date";
+
 import { useAuthentication } from "../../contexts/Authentication";
+
+import { Container, CommentBox, AuthorAndTime, ButtonDelete } from "./styles";
 
 interface CommentProps {
   postAuthorId: string;
@@ -15,6 +20,7 @@ interface CommentProps {
   content: string;
   reactions: any[];
   commentedAt: string;
+  onDelete(id: string): void;
 }
 
 const Comment: React.FC<CommentProps> = ({
@@ -26,6 +32,7 @@ const Comment: React.FC<CommentProps> = ({
   content,
   reactions = [],
   commentedAt,
+  onDelete,
 }) => {
   const navigate = useNavigate();
   const { user } = useAuthentication();
@@ -49,7 +56,7 @@ const Comment: React.FC<CommentProps> = ({
           </time>
 
           {(user && user.id === authorId) || user?.id === postAuthorId ? (
-            <ButtonDelete>
+            <ButtonDelete onClick={() => onDelete(commentId)}>
               <Trash size={22} />
             </ButtonDelete>
           ) : null}

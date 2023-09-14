@@ -22,8 +22,9 @@ import {
 } from "./styles";
 
 const Register: React.FC = () => {
-  const navigate = useNavigate();
   const { handleLoggedEmail } = useAuthentication();
+
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [birthDate, setBirthDate] = useState("");
@@ -31,6 +32,7 @@ const Register: React.FC = () => {
   const [confirmEmail, setConfirmEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const areaEmail = !name || !birthDate;
@@ -66,9 +68,9 @@ const Register: React.FC = () => {
 
         if (result === "success") {
           if (data) {
-            handleLoggedEmail(data.email);
-
             toast.success(message);
+
+            handleLoggedEmail(data.email);
             handleLogin();
           }
         }

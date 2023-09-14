@@ -8,8 +8,6 @@ interface ContainerProps {
 export const Container = styled.img<ContainerProps>`
   width: ${({ $size }) => $size};
   height: ${({ $size }) => $size};
-  width: 56px;
-  height: 56px;
   min-width: 56px;
   min-height: 56px;
   background: white;

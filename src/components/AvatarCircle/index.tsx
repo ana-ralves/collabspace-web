@@ -10,7 +10,7 @@ const AvatarCircle: React.FC<AvatarCircleProps> = ({
   size = "48px",
   ...rest
 }) => {
-  return <Container $size={size} {...rest} />;
+  return <Container {...rest} $size={size} />;
 };
 
 export default AvatarCircle;

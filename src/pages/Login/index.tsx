@@ -1,5 +1,5 @@
+import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 
 import { useAuthentication } from "../../contexts/Authentication";

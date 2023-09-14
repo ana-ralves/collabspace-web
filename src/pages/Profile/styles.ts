@@ -45,8 +45,8 @@ export const EditCoverButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    background: var(--emerald-600);
-    color: var(--zinc-200);
+    background: var(--zinc-300);
+    color: var(--emerald-600);
   }
 `;
 
@@ -56,6 +56,7 @@ export const Cover = styled.img`
   height: 192px;
   object-fit: cover;
   border-radius: 8px 8px 0 0;
+  background: var(--zinc-700);
 `;
 
 export const EditInfoButton = styled.button`
@@ -168,8 +169,8 @@ export const AreaFriendButton = styled.div`
   button {
     height: 40px;
     padding: 0 1rem;
-    border: 1px solid var(--zinc-700);
     outline: 0;
+    border: 1px solid var(--zinc-700);
     border-radius: 8px;
     font-weight: 500;
     color: var(--zinc-300);

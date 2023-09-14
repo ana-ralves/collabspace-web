@@ -1,13 +1,15 @@
 import {
-  ReactNode,
   createContext,
   useContext,
   useState,
   useCallback,
+  ReactNode,
 } from "react";
 
-import { User } from "../services/Sessions/types";
-import { session } from "../services/Sessions";
+import { User } from "../services/sessions/types";
+
+import { session } from "../services/sessions";
+
 import api from "../services/Api/api";
 import usePersistedState from "../hooks/usePersistedState";
 
@@ -22,8 +24,8 @@ interface SignInResponse {
 }
 
 interface AuthenticationContextType {
-  loading: boolean;
   signed: boolean;
+  loading: boolean;
   user: Partial<User> | null;
   token: string;
   loggedEmail: string;
@@ -42,7 +44,7 @@ const AuthenticationContext = createContext<AuthenticationContextType>(
 
 const AuthenticationProvider = ({ children }: AuthenticationProviderProps) => {
   const [user, setUser] = usePersistedState<Partial<User> | null>("user", null);
-  const [token, setToken] = usePersistedState("token", "");
+  const [token, setToken] = usePersistedState<string>("token", "");
 
   const [loading, setLoading] = useState<boolean>(false);
   const [loggedEmail, setLoggedEmail] = useState<string>("");

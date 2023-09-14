@@ -2,14 +2,16 @@ import { useState, useCallback, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import { useAuthentication } from "../../contexts/Authentication";
+
+import { createPost } from "../../services/posts";
+import { IPost } from "../../services/posts/types";
+
 import Avatar from "../AvatarSquare";
 import InputArea from "../InputArea";
 import Button from "../Button";
 
-import { useAuthentication } from "../../contexts/Authentication";
 import { Container, Form } from "./styles";
-import { createPost } from "../../services/posts";
-import { IPost } from "../../services/posts/types";
 
 interface CreatePostProps {
   onCreatePost: (post: IPost) => void;
@@ -35,6 +37,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ onCreatePost }) => {
             toast.success(message);
           }
         }
+
         if (result === "error") toast.error(message);
       } catch (error: any) {
         toast.error(error.message);

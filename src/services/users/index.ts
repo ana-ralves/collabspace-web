@@ -10,9 +10,9 @@ import {
 const createUser = async ({
   name,
   email,
+  confirmEmail,
   password,
   confirmPassword,
-  confirmEmail,
   telephone,
   birthDate,
 }: ICreateUserRequest): Promise<ICreateUserResponse> => {
@@ -20,9 +20,9 @@ const createUser = async ({
     .post("/users", {
       name,
       email,
+      confirmEmail,
       password,
       confirmPassword,
-      confirmEmail,
       telephone,
       birthDate,
     })

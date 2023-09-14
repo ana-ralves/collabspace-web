@@ -1,4 +1,5 @@
 import api from "../Api/api";
+
 import {
   ICreatePostRequest,
   ICreatePostResponse,
@@ -18,6 +19,7 @@ const createPost = async ({
     })
     .then((res) => res)
     .catch((err) => err);
+
   return response.data;
 };
 

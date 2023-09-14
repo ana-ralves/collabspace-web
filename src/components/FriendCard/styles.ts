@@ -8,7 +8,7 @@ export const Container = styled.div`
 
 export const Info = styled.div`
   h1 {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     color: var(--zinc-200);
     font-weight: 500;
   }

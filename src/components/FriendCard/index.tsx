@@ -1,4 +1,5 @@
 import AvatarSquare from "../AvatarSquare";
+
 import { Container, Info } from "./styles";
 
 const FriendCard: React.FC = () => {
