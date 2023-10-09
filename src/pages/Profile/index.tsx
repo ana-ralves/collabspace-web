@@ -1,18 +1,36 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, FormEvent } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import moment from "moment";
 
 import { IUser } from "../../services/users/types";
-import { listUserById } from "../../services/users";
+import { listUserById, updateAvatar, updateCover } from "../../services/users";
+import { IFriend, IRequest } from "../../services/friends/types";
+import {
+  cancelRequest,
+  createFriend,
+  listAllFriendsByUser,
+  listAllRequestsByUser,
+} from "../../services/friends";
 
 import LayoutDefault from "../../layouts/Default";
 
 import AvatarCircle from "../../components/AvatarCircle";
 import RequestFriend from "../../components/RequestFriend";
 import FriendCard from "../../components/FriendCard";
+import Modal from "../../components/Modal";
 
-import { Camera, PencilSimple, MapPin, Phone, Clock } from "phosphor-react";
+import { useAuthentication } from "../../contexts/Authentication";
+
+import {
+  Camera,
+  PencilSimple,
+  MapPin,
+  Phone,
+  Clock,
+  UserCirclePlus,
+  UserCircleMinus,
+} from "phosphor-react";
 
 import {
   Container,
@@ -25,6 +43,8 @@ import {
   EditInfoButton,
   General,
   Total,
+  FriendshipArea,
+  FriendshipButton,
   Contact,
   Friends,
   FriendList,
@@ -32,8 +52,11 @@ import {
   Sidebar,
   Requests,
   RequestList,
+  FormEdit,
+  InputEdit,
+  ButtonEdit,
+  PreviewAvatar,
 } from "./styles";
-import { useAuthentication } from "../../contexts/Authentication";
 
 moment.defineLocale("pt-br", {
   weekdays: "Segunda_Terça_Quarta_Quinta_Sexta_Sábado_Domingo".split("_"),
@@ -45,9 +68,26 @@ moment.defineLocale("pt-br", {
 
 const Profile: React.FC = () => {
   const { id } = useParams();
-  const { signOut } = useAuthentication();
+
+  const {
+    user: userLogged,
+    handleAvatarUrl,
+    handleCoverUrl,
+    signOut,
+  } = useAuthentication();
 
   const [user, setUser] = useState<IUser | null>(null);
+  const [friends, setFriends] = useState<IFriend[]>([]);
+  const [requests, setRequests] = useState<IRequest[]>([]);
+  const [userLoggedRequests, setUserLoggedRequests] = useState<IRequest[]>([]);
+
+  const [relationship, setRelationship] = useState(-1);
+  const [relationshipId, setRelationshipId] = useState<string>();
+  const [modalEditAvatar, setModalEditAvatar] = useState(false);
+  const [modalEditCover, setModalEditCover] = useState(false);
+  const [modalPreviewAvatar, setModalPreviewAvatar] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [coverUrl, setCoverUrl] = useState("");
 
   const handleListUserById = useCallback(async () => {
     try {
@@ -65,9 +105,203 @@ const Profile: React.FC = () => {
     }
   }, [id]);
 
+  const handleListAllFriendsByUser = useCallback(async () => {
+    try {
+      if (id) {
+        const { result, data, message } = await listAllFriendsByUser({ id });
+
+        if (result === "success") {
+          if (data?.friends) setFriends(data.friends);
+        }
+
+        if (result === "error") toast.error(message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }, [id]);
+
+  const handleListAllRequestsByUser = useCallback(async () => {
+    try {
+      if (id) {
+        const { result, data, message } = await listAllRequestsByUser({ id });
+
+        if (result === "success") {
+          if (data?.requests) setRequests(data.requests);
+        }
+
+        if (result === "error") toast.error(message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }, [id]);
+
+  const handleListAllRequestsByUserLogged = useCallback(async () => {
+    try {
+      if (userLogged?.id) {
+        const { result, data, message } = await listAllRequestsByUser({
+          id: userLogged.id,
+        });
+
+        if (result === "success") {
+          if (data?.requests) setUserLoggedRequests(data.requests);
+        }
+
+        if (result === "error") toast.error(message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }, [userLogged]);
+
+  const handleToggleRelationship = useCallback(async () => {
+    try {
+      switch (relationship) {
+        case 1: // Enviar uma solicitação de amizade
+          if (id) {
+            const { result, data, message } = await createFriend({ id });
+
+            if (result === "success") {
+              if (data) {
+                setRelationship(2);
+                setRelationshipId(data.id);
+              }
+            }
+
+            if (result === "error") toast.error(message);
+          }
+          break;
+        case 2: // Cancelar a solicitação enviada
+          if (relationshipId) {
+            const { result, message } = await cancelRequest({
+              id: relationshipId,
+            });
+
+            if (result === "success") setRelationship(1);
+            if (result === "error") toast.error(message);
+          }
+          break;
+        case 3: // Desfazer a amizade
+          break;
+        case 4: // Aceitar o pedido de amizade
+          break;
+        default:
+          break;
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }, [id, relationship, relationshipId]);
+
+  const handleUpdateAvatar = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault();
+
+      try {
+        const { result, message } = await updateAvatar({ avatarUrl });
+
+        if (result === "success") {
+          handleAvatarUrl(avatarUrl);
+          toast.success(message);
+          setModalEditAvatar(!modalEditAvatar);
+        }
+
+        if (result === "error") toast.error(message);
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    },
+    [avatarUrl, handleAvatarUrl, modalEditAvatar],
+  );
+
+  const handleUpdateCover = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault();
+
+      try {
+        const { result, message } = await updateCover({ coverUrl });
+
+        if (result === "success") {
+          handleCoverUrl(coverUrl);
+          toast.success(message);
+          setModalEditCover(!modalEditCover);
+        }
+
+        if (result === "error") toast.error(message);
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    },
+    [coverUrl, handleCoverUrl, modalEditCover],
+  );
+
+  function toggleModalEditAvatar() {
+    setModalEditAvatar(!modalEditAvatar);
+  }
+
+  function toggleModalEditCover() {
+    setModalEditCover(!modalEditCover);
+  }
+
+  function toggleModalPreviewAvatar() {
+    if (user?.avatarUrl) setModalPreviewAvatar(!modalPreviewAvatar);
+    else setModalPreviewAvatar(false);
+  }
+
   useEffect(() => {
     handleListUserById();
-  }, [id, handleListUserById]);
+    handleListAllFriendsByUser();
+    handleListAllRequestsByUser();
+    handleListAllRequestsByUserLogged();
+  }, [
+    id,
+    handleListUserById,
+    handleListAllFriendsByUser,
+    handleListAllRequestsByUser,
+    handleListAllRequestsByUserLogged,
+  ]);
+
+  useEffect(() => {
+    let leave = false;
+    const userLoggedId = userLogged?.id;
+
+    if (userLoggedId) {
+      for (const friend of friends) {
+        if ([friend.user1.id, friend.user2.id].includes(userLoggedId)) {
+          setRelationship(3);
+          setRelationshipId(friend.id);
+          leave = true;
+
+          break;
+        }
+      }
+
+      for (const request of requests) {
+        if (request.user1.id === userLoggedId) {
+          setRelationship(2);
+          setRelationshipId(request.id);
+          leave = true;
+
+          break;
+        }
+      }
+    }
+
+    for (const request of userLoggedRequests) {
+      if (request.user1.id === id) {
+        setRelationship(4);
+        setRelationshipId(request.id);
+        leave = true;
+
+        break;
+      }
+    }
+
+    if (!leave) setRelationship(1);
+  }, [friends, id, requests, userLogged?.id, userLoggedRequests]);
+
+  const isOwner = id === userLogged?.id;
 
   return (
     <LayoutDefault>
@@ -75,31 +309,41 @@ const Profile: React.FC = () => {
         <Content>
           <Overview>
             <UserBanner>
-              <EditCoverButton>
-                <Camera size={22} weight="fill" />
-              </EditCoverButton>
+              {isOwner && (
+                <EditCoverButton onClick={toggleModalEditCover}>
+                  <Camera size={22} weight="fill" />
+                </EditCoverButton>
+              )}
 
-              <Cover src={"https://i.imgur.com/gH2QLjf.png"} />
+              <Cover
+                src={
+                  coverUrl ||
+                  user?.coverUrl ||
+                  "https://i.imgur.com/gH2QLjf.png"
+                }
+              />
 
               <div>
                 <AvatarCircle
                   size="192px"
-                  src={user?.avatarUrl || "https://i.imgur.com/HYrZqHy.jpg"}
+                  avatar={avatarUrl || user?.avatarUrl}
+                  onClick={
+                    isOwner ? toggleModalEditAvatar : toggleModalPreviewAvatar
+                  }
                 />
               </div>
 
-              <EditInfoButton>
-                <PencilSimple size={22} weight="bold" />
-              </EditInfoButton>
+              {isOwner && (
+                <EditInfoButton>
+                  <PencilSimple size={22} weight="bold" />
+                </EditInfoButton>
+              )}
             </UserBanner>
 
             <UserInfo>
               <General>
                 <h1>{user?.name}</h1>
-                <p>
-                  Você só vai me olhar, me julgar, tirar conclusões
-                  precipitadas, mas ainda… assim não vai me conhecer.
-                </p>
+                <p>{user?.bio}</p>
 
                 <Total>
                   <span>
@@ -109,6 +353,49 @@ const Profile: React.FC = () => {
                     <strong>1562</strong> amigos
                   </span>
                 </Total>
+
+                {/*
+                  1 - Adicionar amigo
+                  2 - Cancelar solicitação
+                  3 - Desfazer amizade
+                  4 - Aceitar pedido | Recusar pedido
+                */}
+
+                {!isOwner && (
+                  <FriendshipArea>
+                    <FriendshipButton
+                      $relationship={relationship}
+                      onClick={handleToggleRelationship}
+                    >
+                      {relationship === 1 ? (
+                        <UserCirclePlus size={20} weight="fill" />
+                      ) : relationship === 2 ? (
+                        <UserCircleMinus size={20} weight="fill" />
+                      ) : relationship === 3 ? (
+                        <UserCircleMinus size={20} weight="fill" />
+                      ) : relationship === 4 ? (
+                        <UserCirclePlus size={20} weight="fill" />
+                      ) : null}
+
+                      {relationship === 1
+                        ? "Adicionar amigo"
+                        : relationship === 2
+                        ? "Cancelar solicitação"
+                        : relationship === 3
+                        ? "Desfazer amizade"
+                        : relationship === 4
+                        ? "Aceitar pedido"
+                        : null}
+                    </FriendshipButton>
+
+                    {relationship === 4 && (
+                      <FriendshipButton $relationship={relationship}>
+                        <UserCircleMinus size={20} weight="fill" />
+                        Recusar pedido
+                      </FriendshipButton>
+                    )}
+                  </FriendshipArea>
+                )}
               </General>
 
               <Contact>
@@ -136,18 +423,14 @@ const Profile: React.FC = () => {
             <h1>Amigos</h1>
 
             <FriendList>
-              <FriendCard />
-              <FriendCard />
-              <FriendCard />
-              <FriendCard />
-              <FriendCard />
-              <FriendCard />
-              <FriendCard />
-              <FriendCard />
-              <FriendCard />
-              <FriendCard />
-              <FriendCard />
-              <FriendCard />
+              {friends.map((friend) => (
+                <FriendCard
+                  key={friend.id}
+                  id={friend.user2.id}
+                  name={friend.user2.name}
+                  avatarUrl={friend.user2.avatarUrl}
+                />
+              ))}
             </FriendList>
 
             <AreaFriendButton>
@@ -157,22 +440,78 @@ const Profile: React.FC = () => {
         </Content>
 
         <Sidebar>
-          <Requests>
-            <h1>Solicitações de amizade</h1>
+          {isOwner && (
+            <Requests>
+              <h1>Solicitações de amizade</h1>
 
-            <RequestList>
-              <RequestFriend />
-              <RequestFriend />
-              <RequestFriend />
-              <RequestFriend />
-              <RequestFriend />
-            </RequestList>
-          </Requests>
+              <RequestList>
+                {requests.map((request) => (
+                  <RequestFriend
+                    key={request.id}
+                    id={request.user1.id}
+                    name={request.user1.name}
+                    email={request.user1.name}
+                    avatarUrl={request.user1.avatarUrl}
+                  />
+                ))}
+              </RequestList>
+            </Requests>
+          )}
 
           <a style={{ color: "white" }} onClick={signOut}>
             Sair
           </a>
         </Sidebar>
+
+        <Modal
+          width="75%"
+          height="120px"
+          isOpen={modalEditAvatar}
+          onClose={toggleModalEditAvatar}
+        >
+          <FormEdit onSubmit={handleUpdateAvatar}>
+            <InputEdit
+              name="avatarUrl"
+              type="text"
+              value={avatarUrl}
+              onChange={(e) => {
+                setAvatarUrl(e.target.value);
+              }}
+              placeholder="URL da imagem"
+            />
+            <ButtonEdit>SALVAR</ButtonEdit>
+          </FormEdit>
+        </Modal>
+
+        <Modal
+          width="75%"
+          height="120px"
+          isOpen={modalEditCover}
+          onClose={toggleModalEditCover}
+        >
+          <FormEdit onSubmit={handleUpdateCover}>
+            <InputEdit
+              name="coverUrl"
+              type="text"
+              value={coverUrl}
+              onChange={(e) => {
+                setCoverUrl(e.target.value);
+              }}
+              placeholder="URL do cover"
+            />
+            <ButtonEdit>SALVAR</ButtonEdit>
+          </FormEdit>
+        </Modal>
+
+        <Modal
+          width="90%"
+          isOpen={modalPreviewAvatar}
+          onClose={toggleModalPreviewAvatar}
+        >
+          <PreviewAvatar
+            src={user?.avatarUrl || "https://i.imgur.com/HYrZqHy.jpg"}
+          />
+        </Modal>
       </Container>
     </LayoutDefault>
   );

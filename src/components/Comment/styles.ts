@@ -13,7 +13,6 @@ export const CommentBox = styled.div`
 `;
 
 export const InputArea = styled.div`
-  width: 100%;
   background: var(--zinc-900);
   border-radius: 8px;
   padding: 1rem 1rem 1.5rem 1rem;

@@ -1,7 +1,6 @@
 import { AppResponse } from "../../Api/types";
 
 import { IComment } from "../../comments/types";
-
 import { IReaction } from "../../reactions/types";
 
 interface IUserPost {

@@ -1,4 +1,8 @@
-import { styled } from "styled-components";
+import { styled, css } from "styled-components";
+
+interface FriendshipButtonProps {
+  $relationship: number;
+}
 
 export const Container = styled.div`
   display: flex;
@@ -123,6 +127,36 @@ export const Total = styled.div`
   }
 `;
 
+export const FriendshipArea = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-top: 1rem;
+`;
+
+export const FriendshipButton = styled.button<FriendshipButtonProps>`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: ${({ $relationship }) => {
+    if ($relationship === 1 || $relationship === 2)
+      return css`var(--emerald-600)`;
+    if ($relationship === 3) return css`var(--red-500)`;
+    if ($relationship === 4) return css`var(--blue-600)`;
+  }};
+  color: var(--white);
+  border: 0;
+  outline: 0;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: 0.15s all;
+
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(90%);
+  }
+`;
+
 export const Contact = styled.div`
   flex: 0.3;
 
@@ -209,4 +243,56 @@ export const RequestList = styled.div`
   gap: 1rem;
 
   margin-top: 1rem;
+`;
+
+export const FormEdit = styled.form`
+  height: 100%;
+  padding: 2rem 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+`;
+
+export const InputEdit = styled.input`
+  width: 100%;
+  height: 48px;
+  background: var(--zinc-700);
+  color: var(--zinc-300);
+  font-size: 1rem;
+  padding: 1.25rem 1rem;
+  border-radius: 4px;
+  border: 0;
+  outline: 0;
+
+  &::placeholder {
+    color: var(--zinc-400);
+  }
+`;
+
+export const ButtonEdit = styled.button`
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 1rem;
+  border: 0;
+  outline: 0;
+  border-radius: 4px;
+  color: var(--white);
+  font-weight: 600;
+  background: var(--emerald-500);
+  transition: all 0.15s;
+
+  cursor: pointer;
+
+  &:hover {
+    color: var(--zinc-200);
+    background: var(--emerald-600);
+  }
+`;
+
+export const PreviewAvatar = styled.img`
+  width: 100%;
+  height: 100%;
 `;
