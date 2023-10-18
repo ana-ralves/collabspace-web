@@ -7,10 +7,13 @@ import { IUser } from "../../services/users/types";
 import { listUserById, updateAvatar, updateCover } from "../../services/users";
 import { IFriend, IRequest } from "../../services/friends/types";
 import {
+  acceptRequest,
   cancelRequest,
   createFriend,
+  deleteFriend,
   listAllFriendsByUser,
   listAllRequestsByUser,
+  recuseRequest,
 } from "../../services/friends";
 
 import LayoutDefault from "../../layouts/Default";
@@ -81,7 +84,7 @@ const Profile: React.FC = () => {
   const [requests, setRequests] = useState<IRequest[]>([]);
   const [userLoggedRequests, setUserLoggedRequests] = useState<IRequest[]>([]);
 
-  const [relationship, setRelationship] = useState(-1);
+  const [relationship, setRelationship] = useState(0);
   const [relationshipId, setRelationshipId] = useState<string>();
   const [modalEditAvatar, setModalEditAvatar] = useState(false);
   const [modalEditCover, setModalEditCover] = useState(false);
@@ -183,8 +186,24 @@ const Profile: React.FC = () => {
           }
           break;
         case 3: // Desfazer a amizade
+          if (relationshipId) {
+            const { result, message } = await deleteFriend({
+              id: relationshipId,
+            });
+
+            if (result === "success") setRelationship(1);
+            if (result === "error") toast.error(message);
+          }
           break;
         case 4: // Aceitar o pedido de amizade
+          if (relationshipId) {
+            const { result, message } = await acceptRequest({
+              id: relationshipId,
+            });
+
+            if (result === "success") setRelationship(3);
+            if (result === "error") toast.error(message);
+          }
           break;
         default:
           break;
@@ -193,6 +212,28 @@ const Profile: React.FC = () => {
       toast.error(error.message);
     }
   }, [id, relationship, relationshipId]);
+
+  const handleRecuseRequest = useCallback(async () => {
+    try {
+      if (relationshipId) {
+        const { result, message } = await recuseRequest({ id: relationshipId });
+
+        if (result === "success") setRelationship(1);
+        if (result === "error") toast.error(message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }, [relationshipId]);
+
+  const handleRemoveRequest = useCallback(
+    async (id: string) => {
+      setRequests(requests.filter((request) => request.id !== id));
+
+      handleListAllFriendsByUser();
+    },
+    [requests, handleListAllFriendsByUser],
+  );
 
   const handleUpdateAvatar = useCallback(
     async (e: FormEvent) => {
@@ -256,6 +297,7 @@ const Profile: React.FC = () => {
     handleListAllRequestsByUserLogged();
   }, [
     id,
+    relationship,
     handleListUserById,
     handleListAllFriendsByUser,
     handleListAllRequestsByUser,
@@ -299,7 +341,7 @@ const Profile: React.FC = () => {
     }
 
     if (!leave) setRelationship(1);
-  }, [friends, id, requests, userLogged?.id, userLoggedRequests]);
+  }, [id, userLogged?.id, friends, requests, userLoggedRequests]);
 
   const isOwner = id === userLogged?.id;
 
@@ -350,7 +392,7 @@ const Profile: React.FC = () => {
                     <strong>115</strong> publicações
                   </span>
                   <span>
-                    <strong>1562</strong> amigos
+                    <strong>{friends.length}</strong> amigos
                   </span>
                 </Total>
 
@@ -389,7 +431,10 @@ const Profile: React.FC = () => {
                     </FriendshipButton>
 
                     {relationship === 4 && (
-                      <FriendshipButton $relationship={relationship}>
+                      <FriendshipButton
+                        $relationship={relationship}
+                        onClick={handleRecuseRequest}
+                      >
                         <UserCircleMinus size={20} weight="fill" />
                         Recusar pedido
                       </FriendshipButton>
@@ -423,14 +468,26 @@ const Profile: React.FC = () => {
             <h1>Amigos</h1>
 
             <FriendList>
-              {friends.map((friend) => (
-                <FriendCard
-                  key={friend.id}
-                  id={friend.user2.id}
-                  name={friend.user2.name}
-                  avatarUrl={friend.user2.avatarUrl}
-                />
-              ))}
+              {friends.map((friend) => {
+                let userId = friend.user1.id;
+                let userName = friend.user1.name;
+                let userAvatarUrl = friend.user1.avatarUrl;
+
+                if (friend.user1.id === id) {
+                  userId = friend.user2.id;
+                  userName = friend.user2.name;
+                  userAvatarUrl = friend.user2.avatarUrl;
+                }
+
+                return (
+                  <FriendCard
+                    key={friend.id}
+                    id={userId}
+                    name={userName}
+                    avatarUrl={userAvatarUrl}
+                  />
+                );
+              })}
             </FriendList>
 
             <AreaFriendButton>
@@ -448,10 +505,12 @@ const Profile: React.FC = () => {
                 {requests.map((request) => (
                   <RequestFriend
                     key={request.id}
-                    id={request.user1.id}
-                    name={request.user1.name}
-                    email={request.user1.name}
-                    avatarUrl={request.user1.avatarUrl}
+                    id={request.id}
+                    userId={request.user1.id}
+                    userName={request.user1.name}
+                    userEmail={request.user1.name}
+                    userAvatarUrl={request.user1.avatarUrl}
+                    onRemove={() => handleRemoveRequest(request.id)}
                   />
                 ))}
               </RequestList>

@@ -66,6 +66,24 @@ interface ICancelRequestRequest {
 
 type ICancelRequestResponse = AppResponse;
 
+interface IAcceptRequestRequest {
+  id: string;
+}
+
+type IAcceptRequestResponse = AppResponse;
+
+interface IRecuseRequestRequest {
+  id: string;
+}
+
+type IRecuseRequestResponse = AppResponse;
+
+interface IDeleteFriendRequest {
+  id: string;
+}
+
+type IDeleteFriendResponse = AppResponse;
+
 export type {
   IFriend,
   IRequest,
@@ -77,4 +95,10 @@ export type {
   ICreateFriendResponse,
   ICancelRequestRequest,
   ICancelRequestResponse,
+  IAcceptRequestRequest,
+  IAcceptRequestResponse,
+  IRecuseRequestRequest,
+  IRecuseRequestResponse,
+  IDeleteFriendRequest,
+  IDeleteFriendResponse,
 };

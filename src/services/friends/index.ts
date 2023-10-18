@@ -1,14 +1,20 @@
 import api from "../Api/api";
 
 import {
+  IAcceptRequestRequest,
+  IAcceptRequestResponse,
   ICancelRequestRequest,
   ICancelRequestResponse,
   ICreateFriendRequest,
   ICreateFriendResponse,
+  IDeleteFriendRequest,
+  IDeleteFriendResponse,
   IListAllFriendsByUserRequest,
   IListAllFriendsByUserResponse,
   IListAllRequestsByUserRequest,
   IListAllRequestsByUserResponse,
+  IRecuseRequestRequest,
+  IRecuseRequestResponse,
 } from "./types";
 
 const listAllFriendsByUser = async ({
@@ -55,9 +61,45 @@ const cancelRequest = async ({
   return response.data;
 };
 
+const acceptRequest = async ({
+  id,
+}: IAcceptRequestRequest): Promise<IAcceptRequestResponse> => {
+  const response = await api
+    .patch(`/friends/acceptRequest/${id}`)
+    .then((res) => res)
+    .catch((err) => err);
+
+  return response.data;
+};
+
+const recuseRequest = async ({
+  id,
+}: IRecuseRequestRequest): Promise<IRecuseRequestResponse> => {
+  const response = await api
+    .patch(`/friends/recuseRequest/${id}`)
+    .then((res) => res)
+    .catch((err) => err);
+
+  return response.data;
+};
+
+const deleteFriend = async ({
+  id,
+}: IDeleteFriendRequest): Promise<IDeleteFriendResponse> => {
+  const response = await api
+    .delete(`/friends/deleteFriend/${id}`)
+    .then((res) => res)
+    .catch((err) => err);
+
+  return response.data;
+};
+
 export {
   listAllFriendsByUser,
   listAllRequestsByUser,
   createFriend,
   cancelRequest,
+  acceptRequest,
+  recuseRequest,
+  deleteFriend,
 };
