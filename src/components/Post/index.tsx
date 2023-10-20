@@ -247,7 +247,7 @@ const Post: React.FC<PostProps> = ({
         <OptionsArea>
           <DotsThree size={24} weight="bold" onClick={toggleBoxOptions} />
 
-          <BoxOptions $boxOptions={boxOptions}>
+          <BoxOptions ref={boxOptionsRef} $boxOptions={boxOptions}>
             <Option onClick={handleDeletePost}>
               <Trash size={24} weight="fill" />
               Excluir publicação
